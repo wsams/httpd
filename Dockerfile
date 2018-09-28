@@ -1,6 +1,4 @@
-# This is the base PHP 7 image to build from.
-#
-# docker build -t zoopaz-httpd --rm=true .
+# docker build -t wsams/httpd --rm=true .
 FROM ubuntu:18.04
 
 COPY httpd-foreground /usr/bin/
