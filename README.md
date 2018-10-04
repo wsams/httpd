@@ -42,4 +42,4 @@ Create a Docker Compose to quickly run a web server. The examples found here use
   ProxyPassReverse /proxy-path https://foo.example.com
 ```
 
-Find images on [Docker Hub](https://hub.docker.com/r/wsams/httpd/)
+Find images on [Docker Hub](https://hub.docker.com/r/wsams/httpd/). Find source at https://github.com/wsams/httpd
