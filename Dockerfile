@@ -2,7 +2,6 @@
 FROM ubuntu:19.10
 
 COPY httpd-foreground /usr/bin/
-COPY custom.conf /etc/apache2/sites-enabled/
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -35,6 +34,8 @@ RUN apt-get update && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
     chmod 700 /usr/bin/httpd-foreground
+
+COPY custom.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 
