@@ -1,7 +1,8 @@
 # docker build -t wsams/httpd --rm=true .
-FROM ubuntu:18.04
+FROM ubuntu:19.10
 
 COPY httpd-foreground /usr/bin/
+COPY custom.conf /etc/apache2/sites-enabled/
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -29,6 +30,7 @@ RUN apt-get update && \
         php-xsl \
         php-zip && \
     a2enmod ssl && \
+    a2enmod http2 && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
@@ -37,4 +39,3 @@ RUN apt-get update && \
 EXPOSE 80
 
 CMD ["httpd-foreground"]
-
