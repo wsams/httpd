@@ -1,0 +1,25 @@
+version: '3'
+services:
+  proxy:
+    container_name: proxy
+    image: wsams/proxy
+    ports:
+      - 443:443
+      - 80:80
+    environment:
+      - HTTP_SERVER_NAME=example.com
+      - HTTP_SERVER_ADMIN=webmaster@example.com
+      - SSL_CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem
+      - SSL_CERTIFICATE_KEY_FILE=/etc/letsencrypt/live/example.com/privkey.pem
+    volumes:
+      # Put your web content (html/php/...) in `html`
+      - ./html:/var/www/html
+      - ./sample.proxy.conf:/etc/apache2/sites-enabled/proxy.conf
+      # Bind mount your Let's Encrypt certificates.
+      - /etc/letsencrypt/live/example.com:/etc/letsencrypt/live/example.com
+    restart: always
+# You can put all of your servers on the proxy network and reference them in `proxy.conf`
+networks:
+  default:
+    external:
+      name: proxy
