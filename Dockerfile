@@ -1,4 +1,4 @@
-# docker build -t wsams/httpd --rm=true --pull --build-arg SSL_DIR=/etc/letsencrypt/live/zoopaz.io .
+# docker build -t wsams/httpd --rm=true --pull .
 FROM ubuntu:19.10
 
 ARG SSL_DIR
@@ -40,7 +40,6 @@ RUN apt-get update && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir -p $SSL_DIR && \
     chmod 700 /usr/bin/httpd-foreground
 
 COPY custom.conf /etc/apache2/sites-available/000-default.conf
