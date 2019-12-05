@@ -13,6 +13,7 @@ RUN apt-get update && \
         apt-utils \
         curl \
         fail2ban \
+        imagemagick \
         git \
         php \
         php-curl \
@@ -40,7 +41,8 @@ RUN apt-get update && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
-    chmod 700 /usr/bin/httpd-foreground
+    chmod 700 /usr/bin/httpd-foreground && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /apache-key.pem -out /apache-cert.pem
 
 COPY custom.conf /etc/apache2/sites-available/000-default.conf
 
