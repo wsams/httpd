@@ -5,11 +5,10 @@ services:
     ports:
       - 443:443
     environment:
-      - HTTP_SERVER_NAME=example.com
+      - HTTP_SERVER_NAME=localhost
       - HTTP_SERVER_ADMIN=webmaster@example.com
-      - SSL_CERTIFICATE_FILE=/etc/letsencrypt/live/example.com/fullchain.pem
-      - SSL_CERTIFICATE_KEY_FILE=/etc/letsencrypt/live/example.com/privkey.pem
+      - SSL_CERTIFICATE_FILE=/apache-cert.pem
+      - SSL_CERTIFICATE_KEY_FILE=/apache-key.pem
     volumes:
       - ./html:/var/www/html
-      - /etc/letsencrypt/live/example.com:/etc/letsencrypt/live/example.com
     restart: always
