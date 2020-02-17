@@ -20,3 +20,24 @@ See `sample.docker-compose.yml` for example usage. Copy to `docker-compose.yml`,
 The sample Docker Compose file uses the self-signed certificates provided in the image by default. Once a container is started you should be able to access `https://localhost`
 
 Find images on [Docker Hub](https://hub.docker.com/r/wsams/httpd/). Find source at https://github.com/wsams/httpd
+
+Security note. If you are proxing to an https URL, the CN of the certificate must match the host as defined in the `custom.conf` file mounted into the container. For example, you may have a Docker service `myservice` that you are proxying. In that case you would set `CN=myservice` when generating the certificate. Here's an example creating a private key and certificate for use with an application.
+
+```
+openssl req -new -newkey rsa:4096 -nodes -keyout /privkey.pem -out /snakeoil.csr -subj "/C=US/ST=Oregon/L=Portland/O=Zoopaz/OU=Zoopaz/CN=myservice"
+openssl x509 -req -sha256 -days 365 -in /snakeoil.csr -signkey /privkey.pem -out /fullchain.pem
+```
+
+Your proxy configuration could look like this,
+
+```
+ProxyPass        /app/ https://myservice:8080/app/ retry=0 connectiontimeout=300 timeout=300
+ProxyPassReverse /app/ https://myservice:8080/app/
+```
+
+The expiration date of the proxied service must also be valid, otherwise an error will be thrown. The two directives controlling that are found in `custom.conf` and are,
+
+```
+SSLProxyCheckPeerCN on
+SSLProxyCheckPeerExpire on
+```
