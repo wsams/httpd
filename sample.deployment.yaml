@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd
+  labels:
+    app: httpd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpd
+  template:
+    metadata:
+      labels:
+        app: httpd
+    spec:
+      containers:
+      - name: httpd
+        image: wsams/httpd:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: HTTP_SERVER_NAME
+          value: localhost
+        - name: HTTP_SERVER_ADMIN
+          value: webmaster@example.com
+        - name: SSL_CERTIFICATE_FILE
+          value: /apache-cert.pem
+        - name: SSL_CERTIFICATE_KEY_FILE
+          value: /apache-key.pem
+        resources:
+          requests:
+            memory: 0
+            cpu: 0
+          limits:
+            memory: 128Mi
+            cpu: 256m
+# Uncomment the following and edit accordingly. This would allow you to mount /var/www/html as a PersistentVolumeClaim. This data would then persist across Deployment restarts
+#        volumeMounts:
+#          - name: httpd-data
+#            mountPath: /var/www/html
+#      volumes:
+#      - name: httpd-data
+#        persistentVolumeClaim:
+#          claimName: httpd-pvc
+#---
+#kind: PersistentVolumeClaim
+#apiVersion: v1
+#metadata:
+#  name: httpd-pvc
+#  annotations:
+#    volume.beta.kubernetes.io/storage-class: enter-your-storage-class
+#spec:
+#  accessModes:
+#  - ReadWriteOnce
+#  resources:
+#    requests:
+#      storage: 1Gi
