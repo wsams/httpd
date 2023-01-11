@@ -1,5 +1,5 @@
 # docker build -t wsams/httpd --rm=true --pull .
-FROM ubuntu:19.10
+FROM ubuntu:22.04
 
 ARG SSL_DIR
 
