@@ -1,6 +1,6 @@
 # httpd Docker image
 
-This image can be used to run an Apache httpd 2.4 web server with SSL enabled. It also comes with PHP 7.
+This image can be used to run an Apache httpd 2.4 web server with SSL enabled. It is built on Ubuntu 24.04 and ships with PHP 8.
 
 To use this image provide the following environment variables:
 
@@ -20,6 +20,8 @@ See `sample.docker-compose.yml` for example usage. Copy to `docker-compose.yml`,
 The sample Docker Compose file uses the self-signed certificates provided in the image by default. Once a container is started you should be able to access `https://localhost`
 
 Find images on [Docker Hub](https://hub.docker.com/r/wsams/httpd/). Find source at https://github.com/wsams/httpd
+
+Nightly Docker Hub image builds are published from GitHub Actions, and pushes to `master` run semantic-release to create GitHub releases.
 
 Security note. If you are proxing to an https URL, the CN of the certificate must match the host as defined in the `custom.conf` file mounted into the container. For example, you may have a Docker service `myservice` that you are proxying. In that case you would set `CN=myservice` when generating the certificate. Here's an example creating a private key and certificate for use with an application.
 
