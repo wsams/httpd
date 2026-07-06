@@ -1,26 +1,24 @@
 # docker build -t wsams/httpd --rm=true --pull .
-FROM ubuntu:22.04
-
-ARG SSL_DIR
+FROM ubuntu:24.04
 
 COPY httpd-foreground /usr/bin/
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
-    apt-get -y install \
+    apt-get -y install --no-install-recommends \
         apache2 \
-        apt-utils \
+        ca-certificates \
         curl \
-        fail2ban \
-        imagemagick \
         git \
+        imagemagick \
+        libapache2-mod-php \
+        openssl \
         php \
         php-curl \
         php-gd \
         php-imagick \
         php-imap \
-        php-json \
         php-mongodb \
         php-mysql \
         php-sqlite3 \
@@ -42,10 +40,10 @@ RUN apt-get update && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
     chmod 700 /usr/bin/httpd-foreground && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj "/C=US/ST=Xaero/L=Pepper/O=Zoopaz/OU=Zoopaz/CN=localhost" -keyout /apache-key.pem -out /apache-cert.pem
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -sha256 -subj "/C=US/ST=Xaero/L=Pepper/O=Zoopaz/OU=Zoopaz/CN=localhost" -keyout /apache-key.pem -out /apache-cert.pem
 
 COPY custom.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 80
+EXPOSE 80 443
 
 CMD ["httpd-foreground"]
