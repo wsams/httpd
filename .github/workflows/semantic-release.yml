@@ -28,6 +28,9 @@ jobs:
       - name: Install release dependencies
         run: npm ci
 
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login -u "${{ secrets.REGISTERY_USERNAME }}" --password-stdin
+
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
