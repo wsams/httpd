@@ -1,6 +1,6 @@
 # Base image: opinionated Apache httpd on Ubuntu with SSL and common proxy modules.
 # docker build -t wsams/httpd:local --rm --pull .
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 COPY httpd-foreground /usr/bin/
 
