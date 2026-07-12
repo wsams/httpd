@@ -1,6 +1,6 @@
 # httpd Docker image
 
-Opinionated Apache httpd 2.4 images on Ubuntu 24.04, published as a single Docker Hub repository with flavor tags.
+Opinionated Apache httpd 2.4 images on Ubuntu 26.04, published as a single Docker Hub repository with flavor tags.
 
 | Tag | Contents |
 | --- | --- |

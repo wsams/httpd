@@ -13,7 +13,6 @@ RUN apt-get update && \
         php-curl \
         php-gd \
         php-imagick \
-        php-imap \
         php-mongodb \
         php-mysql \
         php-sqlite3 \
