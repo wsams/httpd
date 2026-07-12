@@ -13,6 +13,8 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: wsams/httpd
     steps:
       - name: Check out repository
         uses: actions/checkout@v7.0.0
@@ -28,7 +30,15 @@ jobs:
       - name: Install release dependencies
         run: npm ci
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4.4.0
+        with:
+          username: ${{ secrets.REGISTERY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
       - name: Run semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+        run: |
+          chmod +x scripts/build-images.sh
+          npx semantic-release

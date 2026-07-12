@@ -44,10 +44,12 @@ The Python flavor uses Apache `mod_wsgi`. Place an `index.py` in the document ro
 
 ## Releases and automation
 
-* Pushes to `master` run **semantic-release**, which creates GitHub releases/tags from conventional commits.
-* Published GitHub releases trigger **Docker Hub publishes** for all three flavors (`x.y.z`, `php-x.y.z`, `python-x.y.z`, plus floating `latest` / `php` / `python`).
+* Pushes to `master` run **semantic-release**, which:
+  1. Creates a GitHub release/tag from conventional commits
+  2. Builds and pushes all three Docker Hub flavors for that version (`x.y.z`, `php-x.y.z`, `python-x.y.z`) plus floating tags (`latest`, `php`, `python`)
 * A **nightly** workflow rebuilds and pushes the nightly tags.
 * **Renovate** runs on a schedule, opens dependency PRs with `fix(deps):` commits, and automerges eligible updates (patch/minor). Merges to `master` can produce a new semantic-release and image publish.
+* The **Republish Docker images** workflow can manually rebuild/push a given version if needed.
 
 ### Renovate setup
 
