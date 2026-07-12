@@ -1,0 +1,18 @@
+# Python flavor layered on the base httpd image (mod_wsgi).
+# docker build -t wsams/httpd:python-local -f Dockerfile.python --build-arg BASE_IMAGE=wsams/httpd:local .
+ARG BASE_IMAGE=wsams/httpd:latest
+FROM ${BASE_IMAGE}
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+COPY python/apache-python.conf /etc/apache2/conf-available/python-wsgi.conf
+
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends \
+        libapache2-mod-wsgi-py3 \
+        python3 && \
+    a2enmod wsgi && \
+    a2enconf python-wsgi && \
+    apt-get -y autoremove && \
+    apt-get -y clean && \
+    rm -rf /var/lib/apt/lists/*

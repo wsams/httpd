@@ -1,1 +1,11 @@
 reverse-proxy
+.git
+.github
+node_modules
+*.md
+package.json
+package-lock.json
+release.config.cjs
+renovate.json
+scripts
+examples

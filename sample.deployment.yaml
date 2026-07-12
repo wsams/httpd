@@ -16,14 +16,15 @@ spec:
     spec:
       containers:
       - name: httpd
-        image: wsams/httpd:latest
+        image: wsams/httpd:php
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        - containerPort: 443
         env:
-        - name: HTTP_SERVER_NAME
+        - name: HTTPD_SERVER_NAME
           value: localhost
-        - name: HTTP_SERVER_ADMIN
+        - name: HTTPD_SERVER_ADMIN
           value: webmaster@example.com
         - name: SSL_CERTIFICATE_FILE
           value: /apache-cert.pem

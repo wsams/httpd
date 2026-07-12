@@ -1,4 +1,4 @@
-name: Nightly Docker image
+name: Nightly Docker images
 
 on:
   schedule:
@@ -17,8 +17,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v7.0.0
 
-      - name: Set nightly tag
-        run: echo "DATE_TAG=nightly-$(date -u +'%Y%m%d')" >> "$GITHUB_ENV"
+      - name: Set nightly tags
+        run: |
+          DATE_TAG="nightly-$(date -u +'%Y%m%d')"
+          echo "DATE_TAG=${DATE_TAG}" >> "$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4.2.0
@@ -29,14 +31,12 @@ jobs:
           username: ${{ secrets.REGISTERY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
-      - name: Build and push nightly image
-        uses: docker/build-push-action@v7.3.0
-        with:
-          context: .
-          pull: true
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:nightly
-            ${{ env.IMAGE_NAME }}:${{ env.DATE_TAG }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Build and push nightly images
+        run: |
+          chmod +x scripts/build-images.sh
+          PUSH=true \
+            FLOAT_BASE=nightly \
+            FLOAT_PHP=php-nightly \
+            FLOAT_PYTHON=python-nightly \
+            IMAGE_NAME="${IMAGE_NAME}" \
+            ./scripts/build-images.sh "${DATE_TAG}"

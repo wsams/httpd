@@ -1,33 +1,17 @@
-# docker build -t wsams/httpd --rm=true --pull .
+# Base image: opinionated Apache httpd on Ubuntu with SSL and common proxy modules.
+# docker build -t wsams/httpd:local --rm --pull .
 FROM ubuntu:24.04
 
 COPY httpd-foreground /usr/bin/
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     apt-get -y install --no-install-recommends \
         apache2 \
         ca-certificates \
         curl \
-        git \
-        imagemagick \
-        libapache2-mod-php \
-        openssl \
-        php \
-        php-curl \
-        php-gd \
-        php-imagick \
-        php-imap \
-        php-mongodb \
-        php-mysql \
-        php-sqlite3 \
-        php-xml \
-        php-xsl \
-        php-zip \
-        unzip \
-        vim \
-        zip && \
+        openssl && \
     a2enmod headers && \
     a2enmod http2 && \
     a2enmod proxy && \
@@ -40,7 +24,9 @@ RUN apt-get update && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/* && \
     chmod 700 /usr/bin/httpd-foreground && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -sha256 -subj "/C=US/ST=Xaero/L=Pepper/O=Zoopaz/OU=Zoopaz/CN=localhost" -keyout /apache-key.pem -out /apache-cert.pem
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -sha256 \
+        -subj "/C=US/ST=Xaero/L=Pepper/O=Zoopaz/OU=Zoopaz/CN=localhost" \
+        -keyout /apache-key.pem -out /apache-cert.pem
 
 COPY custom.conf /etc/apache2/sites-available/000-default.conf
 

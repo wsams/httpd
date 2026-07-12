@@ -1,14 +1,14 @@
-version: '3'
 services:
-  proxy:
-    image: wsams/httpd
+  httpd:
+    image: wsams/httpd:php
     ports:
-      - 443:443
+      - "443:443"
+      - "80:80"
     environment:
-      - HTTP_SERVER_NAME=localhost
-      - HTTP_SERVER_ADMIN=webmaster@example.com
+      - HTTPD_SERVER_NAME=localhost
+      - HTTPD_SERVER_ADMIN=webmaster@example.com
       - SSL_CERTIFICATE_FILE=/apache-cert.pem
       - SSL_CERTIFICATE_KEY_FILE=/apache-key.pem
     volumes:
-      - ./html:/var/www/html
+      - ./examples:/var/www/html
     restart: always
