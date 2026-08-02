@@ -53,7 +53,7 @@ wait_for_http() {
   local attempts="${2:-30}"
   local i
   for ((i = 1; i <= attempts; i++)); do
-    if curl "${CURL_OPTS[@]}" -k -o /dev/null "${url}"; then
+    if curl "${CURL_OPTS[@]}" -k -o /dev/null "${url}" 2>/dev/null; then
       return 0
     fi
     sleep 1
