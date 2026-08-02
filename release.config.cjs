@@ -8,7 +8,7 @@ module.exports = {
       '@semantic-release/exec',
       {
         publishCmd:
-          'PUSH=true FLOAT_BASE=latest FLOAT_PHP=php FLOAT_PYTHON=python ./scripts/build-images.sh ${nextRelease.version}',
+          'PUSH=true FLOAT_BASE=latest FLOAT_PHP=php FLOAT_PYTHON=python FLOAT_GO=go FLOAT_NGINX=nginx ./scripts/build-images.sh ${nextRelease.version}',
       },
     ],
   ],

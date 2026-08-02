@@ -37,5 +37,7 @@ jobs:
             FLOAT_BASE=latest \
             FLOAT_PHP=php \
             FLOAT_PYTHON=python \
+            FLOAT_GO=go \
+            FLOAT_NGINX=nginx \
             IMAGE_NAME="${IMAGE_NAME}" \
             ./scripts/build-images.sh "${{ inputs.version }}"
