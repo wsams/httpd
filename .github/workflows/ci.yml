@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: wsams/httpd
@@ -20,5 +20,9 @@ jobs:
 
       - name: Build all image flavors
         run: |
-          chmod +x scripts/build-images.sh
+          chmod +x scripts/build-images.sh scripts/test-images.sh
           IMAGE_NAME="${IMAGE_NAME}" ./scripts/build-images.sh ci
+
+      - name: Smoke-test image flavors
+        run: |
+          IMAGE_NAME="${IMAGE_NAME}" ./scripts/test-images.sh ci

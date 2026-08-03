@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
-# Build (and optionally push) base, php, and python image tags for wsams/httpd.
+# Build (and optionally push) base, php, python, go, and nginx image tags for wsams/httpd.
 #
 # Usage:
 #   ./scripts/build-images.sh 1.2.3
-#   PUSH=true FLOAT_BASE=latest FLOAT_PHP=php FLOAT_PYTHON=python ./scripts/build-images.sh 1.2.3
-#   FLOAT_BASE=nightly FLOAT_PHP=php-nightly FLOAT_PYTHON=python-nightly ./scripts/build-images.sh nightly-20260712
+#   PUSH=true FLOAT_BASE=latest FLOAT_PHP=php FLOAT_PYTHON=python FLOAT_GO=go FLOAT_NGINX=nginx \
+#     ./scripts/build-images.sh 1.2.3
+#   FLOAT_BASE=nightly FLOAT_PHP=php-nightly FLOAT_PYTHON=python-nightly \
+#     FLOAT_GO=go-nightly FLOAT_NGINX=nginx-nightly \
+#     ./scripts/build-images.sh nightly-20260712
 set -euo pipefail
 
 IMAGE_NAME="${IMAGE_NAME:-wsams/httpd}"
@@ -41,6 +44,20 @@ docker_build \
   --build-arg "BASE_IMAGE=${IMAGE_NAME}:${VERSION}" \
   .
 
+echo "Building ${IMAGE_NAME}:go-${VERSION}"
+docker_build \
+  -t "${IMAGE_NAME}:go-${VERSION}" \
+  -f Dockerfile.go \
+  --build-arg "BASE_IMAGE=${IMAGE_NAME}:${VERSION}" \
+  .
+
+echo "Building ${IMAGE_NAME}:nginx-${VERSION}"
+docker_build \
+  -t "${IMAGE_NAME}:nginx-${VERSION}" \
+  -f Dockerfile.nginx \
+  --pull \
+  .
+
 tag_and_maybe_push() {
   local source="$1"
   local target="$2"
@@ -54,6 +71,8 @@ if [[ "${PUSH}" == "true" ]]; then
   docker push "${IMAGE_NAME}:${VERSION}"
   docker push "${IMAGE_NAME}:php-${VERSION}"
   docker push "${IMAGE_NAME}:python-${VERSION}"
+  docker push "${IMAGE_NAME}:go-${VERSION}"
+  docker push "${IMAGE_NAME}:nginx-${VERSION}"
 fi
 
 IFS=',' read -r -a base_floats <<< "${FLOAT_BASE:-}"
@@ -74,4 +93,16 @@ for t in "${python_floats[@]+"${python_floats[@]}"}"; do
   tag_and_maybe_push "${IMAGE_NAME}:python-${VERSION}" "${IMAGE_NAME}:${t}"
 done
 
-echo "Built ${IMAGE_NAME}:{,php-,python-}${VERSION}"
+IFS=',' read -r -a go_floats <<< "${FLOAT_GO:-}"
+for t in "${go_floats[@]+"${go_floats[@]}"}"; do
+  [[ -z "${t}" ]] && continue
+  tag_and_maybe_push "${IMAGE_NAME}:go-${VERSION}" "${IMAGE_NAME}:${t}"
+done
+
+IFS=',' read -r -a nginx_floats <<< "${FLOAT_NGINX:-}"
+for t in "${nginx_floats[@]+"${nginx_floats[@]}"}"; do
+  [[ -z "${t}" ]] && continue
+  tag_and_maybe_push "${IMAGE_NAME}:nginx-${VERSION}" "${IMAGE_NAME}:${t}"
+done
+
+echo "Built ${IMAGE_NAME}:{,php-,python-,go-,nginx-}${VERSION}"

@@ -35,5 +35,7 @@ jobs:
             FLOAT_BASE=nightly \
             FLOAT_PHP=php-nightly \
             FLOAT_PYTHON=python-nightly \
+            FLOAT_GO=go-nightly \
+            FLOAT_NGINX=nginx-nightly \
             IMAGE_NAME="${IMAGE_NAME}" \
             ./scripts/build-images.sh "${DATE_TAG}"

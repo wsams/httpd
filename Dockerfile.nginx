@@ -1,0 +1,33 @@
+# Nginx flavor: opinionated nginx on Ubuntu with SSL and reverse-proxy defaults.
+# Sibling to the Apache base (not layered on httpd).
+# docker build -t wsams/httpd:nginx-local -f Dockerfile.nginx --rm --pull .
+FROM ubuntu:26.04
+
+COPY nginx/nginx-foreground /usr/bin/
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    NGINX_SERVER_NAME=localhost \
+    SSL_CERTIFICATE_FILE=/nginx-cert.pem \
+    SSL_CERTIFICATE_KEY_FILE=/nginx-key.pem
+
+RUN apt-get update && \
+    apt-get -y install --no-install-recommends \
+        ca-certificates \
+        curl \
+        gettext-base \
+        nginx \
+        openssl && \
+    apt-get -y autoremove && \
+    apt-get -y clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    chmod 700 /usr/bin/nginx-foreground && \
+    mkdir -p /var/www/html /etc/nginx/templates /etc/nginx/conf.d && \
+    rm -f /etc/nginx/sites-enabled/default && \
+    openssl req -x509 -nodes -days 365 -newkey rsa:4096 -sha256 \
+        -subj "/C=US/ST=Xaero/L=Pepper/O=Zoopaz/OU=Zoopaz/CN=localhost" \
+        -keyout /nginx-key.pem -out /nginx-cert.pem
+
+EXPOSE 80 443
+
+CMD ["nginx-foreground"]
